@@ -4,7 +4,6 @@ import java.awt.*;
 import javax.swing.JFrame;
 
 public class Screen {
-	//Get acces to the GraphicsDevice Var = vc
 	private GraphicsDevice vc;
 	
 	public Screen(){
@@ -14,7 +13,7 @@ public class Screen {
 		
 	}
 	
-	public void setFullscren(DisplayMode dm, JFrame window){
+	public void setFullscreen(DisplayMode dm, JFrame window){
 		//make it undecorated and unsizable
 		window.setUndecorated(true);
 		window.setResizable(false);
