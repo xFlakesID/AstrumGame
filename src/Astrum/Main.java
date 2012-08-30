@@ -1,5 +1,6 @@
 package Astrum;
 import java.awt.*;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 public class Main extends JFrame {
@@ -10,36 +11,58 @@ public class Main extends JFrame {
 			m.run(dm);
 		}
 		
+		private Screen screen;
+		private Image bg;
+		private Animation a;
+		
+		//loads Pictures from computer to .java and adds a scene
+		public void loadPics(){
+			bg = new ImageIcon("D:\\Astrum\\TriPort Files\\LogoBackGroundTest.png").getImage();
+
+			Image face1 = new ImageIcon("D:\\Astrum\\Animation\\1.png").getImage();
+			Image face2 = new ImageIcon("D:\\Astrum\\Animation\\2.png").getImage();
+			a = new Animation();
+			a.addScene(face1, 250);
+			a.addScene(face2, 250);
+		}
+		
+		//Main engine to run
 		public void run(DisplayMode dm){
-			setBackground(Color.BLACK);
-			setForeground(Color.WHITE);
-			setFont(new Font("Verdana",Font.PLAIN, 24));
-			
-			
-			/*
-			 * 
-			 * Make it fullscreenand actually catch the screen after 5 sec timer until it quits
-			 * 
-			 */
-			Screen s = new Screen();
+			screen = new Screen();
 			try{
-				s.setFullscreen(dm, this);
-				try{
-					Thread.sleep(5000);
-				}catch(Exception ex){}
-				//the screen gets killed  here and gets restored to your normal dekstop
+				screen.setFullscreen(dm, new JFrame());
+				loadPics();
+				movieLoop();
 			}finally{
-				s.restoreScreen();
+				screen.restoreScreen();
 			}
 		}
 		
-		//paint with the paint method
-		public void paint(Graphics g){
-			if(g instanceof Graphics2D){
-				Graphics2D g2 = (Graphics2D) g;
-				g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-			}
-			g.drawString("Hello Rob",  200, 200);
+		//Main Move Loop
+		//Changed cumTime to qTime because of the irony behind it.
+		public void movieLoop(){
+			long startingTime = System.currentTimeMillis();
+			long qTime = startingTime;
+			
+			while(qTime - startingTime <5000){
+				
+			 long timePassed = System.currentTimeMillis() - qTime;
+				qTime += timePassed;
+				a.updateScene(timePassed);
+				
+				Graphics g = screen.getFullScreenWindow().getGraphics();
+				draw(g);
+				g.dispose();
+			
+				try{
+					Thread.sleep(20);
+				}catch(Exception ex){}
 		}
-		
+	}
+	//Draw Method
+	public void draw(Graphics g){
+		g.drawImage(bg, 0,0,null);
+		g.drawImage(a.getImage(), 0,0,null);
+	}
 }
+
