@@ -81,4 +81,59 @@ public class ScreenManager {
 			return null;
 		}
 	}
+	
+	//Updates display
+	public void update(){
+		Window w = vc.getFullScreenWindow();
+		if(w != null){
+			BufferStrategy s = w.getBufferStrategy();
+			if(!s.contentsLost()){
+				s.show();
+			}
+		}
+	}
+	
+	//Returns fullscreen window
+	public Window getFullScreenWindow(){
+		return vc.getFullScreenWindow();
+	}
+	//get width of window
+	public int getWidth(){
+		Window w = vc.getFullScreenWindow();
+		if(w != null){
+			return w.getWidth();
+		}else{
+			return 0;
+		}
+	}
+	//get height of window
+		public int getHeight(){
+			Window w = vc.getFullScreenWindow();
+			if(w != null){
+				return w.getHeight();
+			}else{
+				return 0;
+			}
+		}
+		
+		//get out of fullscreen
+		public void restoreScreen(){
+			Window w = vc.getFullScreenWindow();
+			if(w != null){
+				w.dispose();
+			}
+			vc.setFullScreenWindow(null);
+		}
+	
+		//create image compatible with monitor
+		public BufferedImage createCompatibleImage(int w, int h, int t){
+			Window win = vc.getFullScreenWindow();
+			if(win != null){
+				GraphicsConfiguration gc = win.getGraphicsConfiguration();
+				return gc.createCompatibleImage(w,h,t);
+			}
+			return null;
+		}
+	
+	
 }

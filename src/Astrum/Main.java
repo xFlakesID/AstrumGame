@@ -10,59 +10,32 @@ public class Main extends JFrame {
 			Main m = new Main();
 			m.run(dm);
 		}
-		
-		private Screen screen;
-		private Image bg;
-		private Animation a;
-		
-		//loads Pictures from computer to .java and adds a scene
-		public void loadPics(){
-			bg = new ImageIcon("D:\\Astrum\\TriPort Files\\LogoBackGroundTest.png").getImage();
 
+		private Animation a;
+		private ScreenManager s;
+		private Image bg;
+		
+		private static final DisplayMode modes1[] = {
+			
+			new DisplayMode(800,600,32,0),
+			new DisplayMode(800,600,24,0),
+			new DisplayMode(800,600,16,0),
+			new DisplayMode(640,480,16,0),
+			new DisplayMode(640,480,24,0),
+			new DisplayMode(640,480,32,0),
+			
+		};
+		
+		//Load images and add Scenes
+		public void loadImages(){
+			bg = new ImageIcon("D:\\Astrum\\TriPort Files\\LogoBackGroundTest.png").getImage();
+			
 			Image face1 = new ImageIcon("D:\\Astrum\\Animation\\1.png").getImage();
 			Image face2 = new ImageIcon("D:\\Astrum\\Animation\\2.png").getImage();
+			
 			a = new Animation();
-			a.addScene(face1, 250);
-			a.addScene(face2, 250);
+			a.addScene(face1, 50);
+			a.addScene(face2, 50);
 		}
-		
-		//Main engine to run
-		public void run(DisplayMode dm){
-			screen = new Screen();
-			try{
-				screen.setFullscreen(dm, new JFrame());
-				loadPics();
-				movieLoop();
-			}finally{
-				screen.restoreScreen();
-			}
-		}
-		
-		//Main Move Loop
-		//Changed cumTime to qTime because of the irony behind it.
-		public void movieLoop(){
-			long startingTime = System.currentTimeMillis();
-			long qTime = startingTime;
-			
-			while(qTime - startingTime <5000){
-				
-			 long timePassed = System.currentTimeMillis() - qTime;
-				qTime += timePassed;
-				a.updateScene(timePassed);
-				
-				Graphics g = screen.getFullScreenWindow().getGraphics();
-				draw(g);
-				g.dispose();
-			
-				try{
-					Thread.sleep(20);
-				}catch(Exception ex){}
-		}
-	}
-	//Draw Method
-	public void draw(Graphics g){
-		g.drawImage(bg, 0,0,null);
-		g.drawImage(a.getImage(), 0,0,null);
-	}
-}
 
+}
