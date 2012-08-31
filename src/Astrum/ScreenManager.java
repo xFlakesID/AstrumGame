@@ -20,4 +20,65 @@ public class ScreenManager {
 		return vc.getDisplayModes();
 	}
 	
+	//comparing dms passed in to vc dm and see if they match.
+	public DisplayMode findFirstCompatibleMode(DisplayMode modes[]){
+		DisplayMode goodModes[] = vc.getDisplayModes();
+		for(int x=0; x<modes.length;x++){
+			for(int y=0;y<goodModes.length;y++){
+				if(displayModesMatch(modes[x], goodModes[y])){
+					return modes[x];
+				}
+			}
+		}
+		return null;
+	}
+	
+	//Get current DM
+	public DisplayMode getCurrentDisplayMode(){
+		return vc.getDisplayMode();
+	}
+	
+	//checks if two modes match each other
+	public boolean displayModesMatch(DisplayMode m1, DisplayMode m2){
+		if(m1.getWidth() != m2.getWidth() || m1.getHeight() != m2.getHeight()){
+			return false;
+		}
+		if(m1.getBitDepth() != DisplayMode.BIT_DEPTH_MULTI && m2.getBitDepth() != DisplayMode.BIT_DEPTH_MULTI && m1.getBitDepth() != m2.getBitDepth()){
+			return false;
+		}
+		if(m1.getRefreshRate() != DisplayMode.REFRESH_RATE_UNKNOWN && m2.getRefreshRate() != DisplayMode.REFRESH_RATE_UNKNOWN && m2.getRefreshRate() != m2.getRefreshRate()){
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//make frame fullscreen
+	public void setFullScreen(DisplayMode dm){
+		JFrame f = new JFrame();
+		f.setUndecorated(true);
+		f.setIgnoreRepaint(true);
+		f.setResizable(false);
+		vc.setFullScreenWindow(f);
+		
+		if(dm != null && vc.isDisplayChangeSupported()){
+			try{
+				vc.setDisplayMode(dm);
+			}catch(Exception ex){}
+		}
+		f.createBufferStrategy(2);
+		
+		
+	}
+	
+	//we will set Graphics object = to this method returns
+	public Graphics2D getGraphics(){
+		Window w = vc.getFullScreenWindow();
+		if(w != null){
+			BufferStrategy s= w.getBufferStrategy();
+			return (Graphics2D)s.getDrawGraphics();
+		}else{
+			return null;
+		}
+	}
 }
