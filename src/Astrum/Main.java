@@ -8,7 +8,7 @@ public class Main extends JFrame {
 			
 			DisplayMode dm = new DisplayMode(800, 600, 16, DisplayMode.REFRESH_RATE_UNKNOWN);
 			Main m = new Main();
-			m.run(dm);
+			m.run();
 		}
 
 		private Animation a;
@@ -34,8 +34,52 @@ public class Main extends JFrame {
 			Image face2 = new ImageIcon("D:\\Astrum\\Animation\\2.png").getImage();
 			
 			a = new Animation();
-			a.addScene(face1, 50);
-			a.addScene(face2, 50);
+			a.addScene(face1, 100);
+			a.addScene(face2, 100);
 		}
-
+		
+		//main method called form main
+		public void run(){
+			s = new ScreenManager();
+			try{
+				DisplayMode dm = s.findFirstCompatibleMode(modes1);
+				s.setFullScreen(dm);
+				loadImages();
+				movieLoop();
+				
+			}finally{
+				s.restoreScreen();
+			}
+		}
+	
+		
+		//play movie
+		public void movieLoop(){
+			long startingTime = System.currentTimeMillis();
+			long qTime = startingTime;
+			while(qTime - startingTime <5000){
+				long timePassed = System.currentTimeMillis() - qTime;
+				qTime += timePassed;
+				a.updateScene(timePassed);
+				
+				//draw and update
+				Graphics2D g = s.getGraphics();
+				draw(g);
+				g.dispose();
+				s.update();
+				
+				try{
+					Thread.sleep(20);
+					
+				}catch(Exception ex){}
+			}
+		}
+		
+		//draw graphics
+		public void draw(Graphics g){
+			g.drawImage(bg, 0,0, null);
+			g.drawImage(a.getImage(), 0,0, null);
+		}
+		
+		
 }
